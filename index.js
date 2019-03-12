@@ -12,9 +12,9 @@ function compare(str1, str2) {
 }
 
 module.exports = postcss.plugin('profiler', function profiler(options) {
- 
+
   return function (css) {
- 
+
     options = options || {};
 
     var rulesBuild = [];
