@@ -47,7 +47,7 @@ module.exports = function(cssCode) {
 
   // 寻找嵌套最深层级最深的 TOP_N 样式
   const TOP_N = 20;
-  logger.blockTitle(`2. 样式名字最长的 TOP${TOP_N} 选择器: `);
+  logger.blockTitle(`2. TOP${TOP_N} 样式名字最长的选择器: `);
   const ruleNameArrCopied = ruleNameArr
     .filter(key => ruleASTGroupByName[key].selectors.length === 1)
     .sort((a, b) => b.length - a.length);
