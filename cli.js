@@ -3,7 +3,7 @@
 const fs       = require('fs');
 const path     = require('path');
 const meow     = require('meow');
-const profiler = require('./profiler.js');
+const analyzer = require('./analyzer.js');
 
 
 const DESCRIPTION = `
@@ -29,7 +29,7 @@ const filepathList = cli.input.map(item => {
 const flags = cli.flags;
 console.log('flags: ', flags);
 
-console.time('css-profiler');
+console.time('css-analyzer');
 let cssContent = '';
 console.log('处理的文件：');
 filepathList.forEach(item => {
@@ -37,5 +37,5 @@ filepathList.forEach(item => {
   let content = fs.readFileSync(item, 'utf8');
   cssContent += content;
 });
-const result = profiler(cssContent);
-console.timeEnd('css-profiler');
+const result = analyzer(cssContent);
+console.timeEnd('css-analyzer');
