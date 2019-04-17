@@ -1,10 +1,10 @@
 {
-  "name": "css-analyzer",
+  "name": "css-profiler",
   "version": "0.0.1",
   "description": "A tool that runs static analysis with PostCSS for css files.",
-  "main": "analyzer.js",
+  "main": "profiler.js",
   "bin": {
-    "css-analyze": "cli.js"
+    "css-profile": "cli.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

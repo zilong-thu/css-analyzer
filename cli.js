@@ -3,7 +3,8 @@
 const fs       = require('fs');
 const path     = require('path');
 const meow     = require('meow');
-const analyzer = require('./analyzer.js');
+const profiler = require('./profiler.js');
+const logger   = require('./utils/log.js');
 
 
 const DESCRIPTION = `
@@ -27,15 +28,14 @@ const filepathList = cli.input.map(item => {
 });
 
 const flags = cli.flags;
-console.log('flags: ', flags);
 
-console.time('css-analyzer');
+console.time('css-profiler');
 let cssContent = '';
-console.log('处理的文件：');
+logger.blockTitle('处理的文件：');
 filepathList.forEach(item => {
-  console.log(item);
+  console.log('  ' + item);
   let content = fs.readFileSync(item, 'utf8');
   cssContent += content;
 });
-const result = analyzer(cssContent);
-console.timeEnd('css-analyzer');
+const result = profiler(cssContent);
+console.timeEnd('css-profiler');
