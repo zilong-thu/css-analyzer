@@ -29,7 +29,7 @@ module.exports = function(cssCode) {
   const table = new Table({
     head: [chalk.white('选择器名称'), chalk.white('出现的次数')],
   });
-  
+
   console.log(chalk.bold('\n==== CSS Static Analysis Report ===='));
   console.log(`共声明了 ${chalk.bold(ruleCount)} 条样式规则`);
   logger.blockTitle('1. Duplicated rules: ');
