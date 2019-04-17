@@ -5,6 +5,18 @@ const Table = require('cli-table3');
 const _ = require('lodash');
 const logger = require('./utils/log.js');
 
+/**
+ * 删除 Vue 打上的 scope hash
+ * @param {String} str 
+ */
+function removeVueStyleHashMark(str) {
+  const reg = /\[data-v-[a-f0-9]{8}\]/g;
+  if (reg.test(str)) {
+    str = str.replace(reg, '');
+  }
+  return str;
+}
+
 module.exports = function(cssCode) {
   const root = postcss.parse(cssCode);
 
@@ -12,8 +24,14 @@ module.exports = function(cssCode) {
   let ruleCount = 0;
 
   root.walkRules(rule => {
-    const selector = rule.selector;
+    const selector = removeVueStyleHashMark(rule.selector);
     ruleCount++;
+
+    // 跳过 keyframes 里的样式声明
+    if (['from', 'to'].includes(selector)) {
+      return;
+    }
+
     if (ruleASTGroupByName[selector] === undefined) {
       ruleASTGroupByName[selector] = {
         count: 1,
@@ -45,7 +63,7 @@ module.exports = function(cssCode) {
   console.log(`\n共有 ${chalk.bold(dpArray.length)} 个规则具有相同的选择器名字，请检查是否可以进行合并？`);
   // console.log(`\n共有 ${chalk.bold(dpArray.length)} 条规则出现了重复声明。请检查是否存在重复定义或者重复引入的问题。`);
 
-  // 寻找嵌套最深层级最深的 TOP_N 样式
+  // 寻找样式名字最长的 TOP_N 选择器
   const TOP_N = 20;
   logger.blockTitle(`2. TOP${TOP_N} 样式名字最长的选择器: `);
   const ruleNameArrCopied = ruleNameArr
