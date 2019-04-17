@@ -1,7 +1,7 @@
 {
   "name": "css-analyzer",
   "version": "1.0.0",
-  "description": "Run static analysis with PostCSS for css files.",
+  "description": "A tool that runs static analysis with PostCSS for css files.",
   "main": "analyzer.js",
   "bin": {
     "css-analyze": "cli.js"
