@@ -2,13 +2,18 @@
 
 CSS-Profiler is a PostCSS Cli tool to analysis CSS code quality, find its problems, and generate a report to guide developers write more clean, maintainable CSS code.
 
+## Features
+
++ Find out duplicated rules.
++ Fine TOP20 selectors that have most characters.
+
 ## Usage
 
 ### Command Line Usage
 
 ```bash
 # install
-$ npm i css-profiler
+$ npm i -g css-profiler
 
 # analysis one or more css files
 $ css-profile style.css style2.css
@@ -16,6 +21,8 @@ $ css-profile style.css style2.css
 ```
 
 ### Node.js API
+
+**TODO**
 
 ```javascript
 const cssProfiler = require('css-profiler');
