@@ -3,7 +3,10 @@ const fs       = require('fs');
 const path     = require('path');
 
 let content = fs.readFileSync(path.resolve(__dirname, 'style.css'), 'utf8');
-profiler(`input {
+
+// profiler(content);
+
+const code = `input {
   display: inline-block;
 }
 input {
@@ -13,11 +16,26 @@ input {
   width: 100%;
   display: block;
 }
-button {
-  background: aquamarine;
-  border: none;
-  margin-top: .2rem;
-  display: block;
-  width: 100%;
+.coupon-card .icon-arrow-down-2::after, .coupon-card .icon-arrow-down-2::before {
+  /**
+   * 动画暂时又去掉了
+   * transition: transform .3s cubic-bezier(.645, .045, .355, 1), top .3s ease;
+   */
+}
+.go-base-button.alarm.touched::before {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: -100%;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #E04C4C;
+  border-radius: 3rem;
+  height: 300%;
+  width: 300%;
+  -webkit-transform: scale(0.3333);
+          transform: scale(0.3333);
   box-sizing: border-box;
-}`);
+  pointer-events: none; }`
+
+profiler(code);

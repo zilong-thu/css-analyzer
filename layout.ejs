@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+  <title>CSS-Profiler分析报告</title>
+  <style><%- cssCode %></style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
+</head>
+
+<body>
+  <h1>CSS Static Analysis Report</h1>
+  <p><%= time %></p>
+  <div class="table-of-contents">
+    <p class="title">目录</p>
+    <div id="toc"></div>
+  </div>
+  <h2 id="h2-files">分析的文件</h2>
+  <ol class="code">
+  <% filepathList.forEach(item => { %>
+    <li><%= item %></li>
+  <% }) %>
+  </ol>
+  <h2 id="h2-duplicated-count">样式规则数量</h2>
+  <p>共分析了 <%= ruleCount %> 条样式规则（具体声明的规则可能多于此数）</p>
+
+  <h2 id="h2-duplicated-rules">重复声明了的样式(Duplicated rules)</h2>
+  <p>共有 <strong><%= duplicatedRules.length %></strong> 个规则具有相同的选择器名字，请检查是否可以进行合并？</p>
+  <table class="code">
+    <thead>
+      <th>样式名</th>
+      <th>重复次数</th>
+      <th>源代码</th>
+    </thead>
+    <tbody>
+    <% duplicatedRules.forEach(item => { %>
+      <tr>
+        <td><%= item.selector %></td>
+        <td><%= item.count %></td>
+        <td>
+          <% item.codes.forEach(code => { %>
+            <div class="inline-code-block">
+              <div class="title">代码的 source-map 路径</div>
+              <pre><code class="css"><%= code %></code></pre>
+            </div>
+          <% }) %>
+        </td>
+      </tr>
+    <% }) %>
+    </tbody>
+  </table>
+
+  <h2 id="h2-top20-longest-rules">TOP20 样式名字最长的选择器</h2>
+  <div class="orderd-list code">
+  <% top20LongNames.forEach((item, index) => { %>
+    <div><label>[<%= index + 1 %>]</label><%= item.replace(/\n/g, '') %></div>
+  <% }) %>
+  </div>
+  <script>
+    <%- jsCode %>
+  </script>
+  <script>
+    /* 启动代码高亮 */
+    document.addEventListener('DOMContentLoaded', (event) => {
+      document.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightBlock(block);
+      });
+    });
+    /* 启动目录自动生成 */
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '#toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: 'body',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h2, h3',
+    });
+  </script>
+</body>
+</html>
