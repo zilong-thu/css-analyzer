@@ -42,3 +42,4 @@ jspm_packages
 test/
 vendor/
 styles/
+package-lock.json

@@ -76,8 +76,8 @@ module.exports = function(cssCode, userOptions = {}) {
   // 寻找样式名字最长的 TOP_N 选择器
   const TOP_N = 20;
   const ruleNameArrCopied = ruleNameArr
-  .filter(key => ruleASTGroupByName[key].selectors.length === 1)
-  .sort((a, b) => b.length - a.length);
+    .filter(key => ruleASTGroupByName[key].selectors.length === 1)
+    .sort((a, b) => b.length - a.length);
   ruleNameArrCopied.length = TOP_N;
 
   return {

@@ -9,8 +9,11 @@ const Table    = require('cli-table3');
 const profiler = require('./profiler.js');
 const logger   = require('./utils/log.js');
 const render   = require('./utils/render-html.js');
+const packageMeta = require('./package.json');
 
 const DESCRIPTION = `
+${chalk.green.bold('CSS-Profiler')}@${packageMeta.version}
+
 Usage
   $ css-profile <filename>
 
@@ -100,8 +103,8 @@ if (flags.type === 'html' || flags.out) {
   });
   console.log(table.toString());
   console.log(`
-共有 ${chalk.bold(result.duplicatedRules.length)} 个规则具有相同的选择器名字，请检查是否可以进行合并？
-提示：此问题通常由于重复定义样式，或者重复导入 css 文件引起。`);
+  共有 ${chalk.bold(result.duplicatedRules.length)} 个规则具有相同的选择器名字，请检查是否可以进行合并？
+  提示：此问题通常由于重复定义样式，或者重复导入 css 文件引起。`);
 
   logger.blockTitle(`2. TOP${result.TOP_N} 样式名字最长的选择器: `);
   result.top20LongNames.forEach((item, index) => {
@@ -111,3 +114,4 @@ if (flags.type === 'html' || flags.out) {
 }
 
 console.timeEnd('css-profiler');
+console.log('version: ', packageMeta.version);
