@@ -2,11 +2,11 @@ const profiler = require('../profiler.js');
 const fs       = require('fs');
 const path     = require('path');
 
-let content = fs.readFileSync(path.resolve(__dirname, 'style.css'), 'utf8');
+let content = fs.readFileSync(path.resolve(__dirname, 'vendor.239b2cf9fe9695a77104.css'), 'utf8');
+let sourceMap = fs.readFileSync(path.resolve(__dirname, 'vendor.239b2cf9fe9695a77104.css.map'), 'utf8');
 
-// profiler(content);
-
-const code = `input {
+const code = {
+  cssCode: `input {
   display: inline-block;
 }
 input {
@@ -36,6 +36,10 @@ input {
   -webkit-transform: scale(0.3333);
           transform: scale(0.3333);
   box-sizing: border-box;
-  pointer-events: none; }`
+  pointer-events: none; }`,
+};
 
-profiler(code);
+profiler({
+  cssCode: content,
+  sourceMap,
+});

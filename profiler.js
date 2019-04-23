@@ -1,11 +1,12 @@
 const fs = require('fs');
+const _  = require('lodash');
 const postcss = require('postcss');
-const _ = require('lodash');
-const logger = require('./utils/log.js');
+const logger  = require('./utils/log.js');
+const decodeMappings = require('./utils/decode-mappings.js');
 
 /**
  * 删除 Vue 打上的 scope hash
- * @param {String} str 
+ * @param {String} str
  */
 function removeVueStyleHashMark(str) {
   const reg = /\[data-v-[a-f0-9]{8}\]/g;
@@ -15,8 +16,12 @@ function removeVueStyleHashMark(str) {
   return str;
 }
 
-module.exports = function(cssCode, userOptions = {}) {
+module.exports = function(cssInputItem, userOptions = {}) {
+  let {cssCode, sourceMap} = cssInputItem;
+  sourceMap = JSON.parse(sourceMap);
+
   const root = postcss.parse(cssCode);
+  const mappingsDecoded = decodeMappings(sourceMap.mappings);
 
   const ruleASTGroupByName = {};
   let ruleCount = 0;
@@ -52,6 +57,52 @@ module.exports = function(cssCode, userOptions = {}) {
       });
     }
 
+    // 选择器在输入文件中的位置
+    let position = {
+      line: rule.source.start.line,
+      column: rule.source.start.column,
+    };
+
+    // 选择器以0起点的位置
+    let selectorPosition = {
+      line_zeroBased: rule.source.start.line - 1,
+      column_zeroBased: rule.source.start.column - 1,
+    };
+
+    // 尝试用选择器的位置去找源码位置
+    let sourcePositionArr = mappingsDecoded[selectorPosition.line_zeroBased]
+      ? mappingsDecoded[selectorPosition.line_zeroBased].find(item => item[0] === selectorPosition.column_zeroBased)
+      : null;
+
+    // 如果找不到，就用节点的位置去找，这个一定能找到
+    // if (!sourcePositionArr) {
+      // let firstNodePosition = {
+      //   line_zeroBased: rule.nodes[0].source.start.line - 1,
+      //   column_zeroBased: rule.nodes[0].source.start.column - 1,
+      // };
+      // sourcePositionArr = mappingsDecoded[firstNodePosition.line_zeroBased]
+      //   ? mappingsDecoded[firstNodePosition.line_zeroBased].find(item => item[0] === firstNodePosition.column_zeroBased)
+      //   : null;
+      // if (sourcePositionArr) {
+      //   sourcePositionArr = _.cloneDeep(sourcePositionArr);
+      //   sourcePositionArr[2]--;
+      //   sourcePositionArr[3]--;
+      // }
+    // }
+    // console.log('sourcePositionArr: ', sourcePositionArr);
+
+    let sourcePosition = null;
+    if (sourcePositionArr) {
+      let sourceFile = sourceMap.sources[sourcePositionArr[1]];
+      sourceFile = sourceFile.replace(/webpack:\/\/\//, '');
+
+      sourcePosition = {
+        line: sourcePositionArr[2] + 1,
+        column: sourcePositionArr[3] + 1,
+        sourceFile,
+      }
+    }
+
     if (ruleASTGroupByName[selector] === undefined) {
       ruleASTGroupByName[selector] = {
         count: 1,
@@ -59,10 +110,15 @@ module.exports = function(cssCode, userOptions = {}) {
         selectors: rule.selectors,
         nodes: rule.nodes,
         codes: [rule.toString()],
+        // 记录代码的起始位置
+        positions: [position],
+        sourcePositions: [sourcePosition],
       };
     } else {
       ruleASTGroupByName[selector].count++;
       ruleASTGroupByName[selector].codes.push(rule.toString());
+      ruleASTGroupByName[selector].positions.push(position);
+      ruleASTGroupByName[selector].sourcePositions.push(sourcePosition);
     }
   });
 

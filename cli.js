@@ -34,7 +34,7 @@ const cli = meow(DESCRIPTION, {
   flags: {
     type: {
       type: 'string',
-      default: 'std',
+      default: 'html',
     },
     out: {
       type: 'string',
@@ -56,7 +56,7 @@ let filepathList = [];
 if (input.length === 1 && /^\.{1,2}\//.test(input[0])) {
   input[0] = path.resolve(process.cwd(), input[0]);
   filepathList = glob.sync(input[0]);
-} else if (input.length >=2) {
+} else if (input.length >= 2) {
   filepathList = cli.input.map(item => {
     return path.resolve(process.cwd(), item);
   });
@@ -65,25 +65,39 @@ if (input.length === 1 && /^\.{1,2}\//.test(input[0])) {
   return;
 }
 
-const flags = cli.flags;
-
-let cssContent = '';
-logger.blockTitle('处理的文件：');
-filepathList.forEach(item => {
-  console.log('  ' + item);
-  let content = fs.readFileSync(item, 'utf8');
-  cssContent += content;
-});
-
-if (filepathList.length > 2) {
-  console.log(chalk.red('抱歉，目前只支持分析最多两个css文件'));
+if (filepathList.length > 1) {
+  console.log(chalk.red('抱歉，目前只支持分析最多1个css文件'));
   process.exit(1);
 }
 
+const flags = cli.flags;
+
+const cssInputList = [];
+
+logger.blockTitle('处理的文件：');
+/*# sourceMappingURL=mall.49ccd68bcf64a24a19b2.css.map*/
+const sourceMapReg = /\/\*#\s*sourceMappingURL=(.+)\*\//;
+filepathList.forEach(item => {
+  console.log('  ' + item);
+  let content = fs.readFileSync(item, 'utf8');
+  const res = sourceMapReg.exec(content);
+  sourceMapFilePath = res ? path.resolve(path.dirname(item), res[1]) : '';
+  const ele = {
+    path: item,
+    cssCode: content,
+    sourceMapFilePath,
+    sourceMap: fs.readFileSync(sourceMapFilePath, 'utf8'),
+  };
+  console.log('cssInputList: ', ele.path, ele.sourceMapFilePath);
+  cssInputList.push(ele);
+});
+
 console.time('css-profiler');
 
-const result = profiler(cssContent, flags);
-result.filepathList = filepathList;
+const cssInputItem = cssInputList[0];
+
+const result = profiler(cssInputItem, flags);
+result.cssInputList = cssInputList;
 
 if (flags.type === 'html' || flags.out) {
   render(result, {

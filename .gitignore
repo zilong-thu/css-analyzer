@@ -41,5 +41,4 @@ jspm_packages
 .DS_Store
 test/
 vendor/
-styles/
 package-lock.json

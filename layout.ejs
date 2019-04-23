@@ -1,6 +1,8 @@
 <!doctype html>
 <html>
 <head>
+  <meta charset="utf-8">
+  <mata lang="zh">
   <title>CSS-Profiler分析报告</title>
   <style><%- cssCode %></style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.4.2/tocbot.min.js"></script>
@@ -15,8 +17,11 @@
   </div>
   <h2 id="h2-files">分析的文件</h2>
   <ol class="code">
-  <% filepathList.forEach(item => { %>
-    <li><%= item %></li>
+  <% cssInputList.forEach(item => { %>
+    <li>
+      <div><%= item.path %></div>
+      <div><%= item.sourceMapFilePath %></div>
+    </li>
   <% }) %>
   </ol>
   <h2 id="h2-duplicated-count">样式规则数量</h2>
@@ -36,9 +41,14 @@
         <td><%= item.selector %></td>
         <td><%= item.count %></td>
         <td>
-          <% item.codes.forEach(code => { %>
+          <% item.codes.forEach((code, index) => { %>
             <div class="inline-code-block">
-              <div class="title">代码的 source-map 路径</div>
+              <div class="title">
+                <div>Line <%= item.positions[index].line %>, Column <%= item.positions[index].column %></div>
+                <% if (item.sourcePositions[index]) { %>
+                <div>=> <%= item.sourcePositions[index].sourceFile %>, Line <%= item.sourcePositions[index].line %>, Column <%= item.sourcePositions[index].column %></div>
+                <% } %>
+              </div>
               <pre><code class="css"><%= code %></code></pre>
             </div>
           <% }) %>

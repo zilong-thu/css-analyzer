@@ -1,0 +1,100 @@
+@import "./layout.less";
+@import (less) "../vendor/highlight.min.css";
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 100px;
+}
+
+body {
+  padding: .15rem .3rem .3rem;
+  color: #5f6368;
+  line-height: 1.6;
+  font-size: .12rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #333;
+  font-weight: normal;
+}
+
+p {
+  margin: .08rem 0 .15rem;
+}
+
+code, .code {
+  font-family: monospace;
+}
+
+.orderd-list {
+  label {
+    margin: 0 .06rem;
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #e8e8e8;
+
+  th:first-child {
+    border-top-left-radius: .05rem;
+  }
+
+  th {
+    background: #fafafa;
+  }
+
+  th, td {
+    border: 1px solid #e8e8e8;
+    padding: .1rem;
+  }
+}
+
+.inline-code-block {
+  border: 1px solid #e8e8e8;
+  border-radius: .05rem;
+
+  .title {
+    padding: .1rem;
+    border-radius: .05rem .05rem 0 0;
+    border-bottom: 1px solid #e8e8e8;
+    background: #f6f8fa;
+  }
+
+  pre {
+    padding: 0;
+    margin: 0;
+  }
+
+  code {
+    padding: .1rem;
+    background: #fff;
+  }
+
+  & + & {
+    margin-top: .1rem;
+  }
+}
+
+.table-of-contents {
+  border: 1px solid #e8e8e8;
+  border-radius: .05rem;
+  padding: 0 .1rem;
+
+  .title {
+    font-size: .16rem;
+  }
+
+  ol {
+    margin-left: 1.5em;
+    padding-left: 0;
+
+    a {
+      text-decoration: none;
+    }
+  }
+}
