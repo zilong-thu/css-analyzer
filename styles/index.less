@@ -59,11 +59,19 @@ table {
   }
 }
 
+/*.code-blocks {
+  display: flex;
+  align-items: flex-start;
+}*/
 .inline-code-block {
   border: 1px solid #e8e8e8;
   border-radius: .05rem;
   display: inline-block;
   width: 3.5rem;
+  margin-right: .1rem;
+  &:last-child {
+    margin-right: 0;
+  }
 
   .title {
     padding: .1rem;

@@ -60,6 +60,7 @@
             <td><%= item.selector %></td>
             <td><%= item.count %></td>
             <td>
+              <div class="code-blocks">
               <% item.codes.forEach((code, index) => { %>
                 <div class="inline-code-block">
                   <div class="title">
@@ -76,6 +77,7 @@
                   <pre><code class="css"><%= code %></code></pre>
                 </div>
               <% }) %>
+              </div>
             </td>
           </tr>
         <% }) %>
@@ -98,7 +100,7 @@
             <td>100%</td>
             <td><strong><%= keyByContent[key].length %></strong></td>
             <td>
-              <div class="scroll-x">
+              <div class="code-blocks">
                 <% keyByContent[key].forEach(item => { %>
                   <div class="inline-code-block">
                     <div class="title">
@@ -135,7 +137,7 @@
           <tr>
             <td><%= item.similarity %></td>
             <td>
-              <div class="scroll-x">
+              <div class="code-blocks">
                 <% item.nodes.forEach(node => { %>
                   <div class="inline-code-block">
                     <div class="title">

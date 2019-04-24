@@ -420,11 +420,19 @@ table td {
   border: 1px solid #e8e8e8;
   padding: 0.1rem;
 }
+/*.code-blocks {
+  display: flex;
+  align-items: flex-start;
+}*/
 .inline-code-block {
   border: 1px solid #e8e8e8;
   border-radius: 0.05rem;
   display: inline-block;
   width: 3.5rem;
+  margin-right: 0.1rem;
+}
+.inline-code-block:last-child {
+  margin-right: 0;
 }
 .inline-code-block .title {
   padding: 0.1rem;
