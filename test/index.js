@@ -2,8 +2,8 @@ const profiler = require('../profiler.js');
 const fs       = require('fs');
 const path     = require('path');
 
-let content = fs.readFileSync(path.resolve(__dirname, 'vendor.239b2cf9fe9695a77104.css'), 'utf8');
-let sourceMap = fs.readFileSync(path.resolve(__dirname, 'vendor.239b2cf9fe9695a77104.css.map'), 'utf8');
+let content = fs.readFileSync(path.resolve(__dirname, 'vendor.css'), 'utf8');
+let sourceMap = fs.readFileSync(path.resolve(__dirname, 'vendor.css.map'), 'utf8');
 
 const code = {
   cssCode: `input {

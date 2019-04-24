@@ -9,60 +9,155 @@
 </head>
 
 <body>
-  <h1>CSS Static Analysis Report</h1>
-  <p><%= time %></p>
-  <div class="table-of-contents">
-    <p class="title">目录</p>
-    <div id="toc"></div>
+  <nav>
+    <h1>CSS Static Analysis Report</h1>
+    <p><%= time %></p>
+  </nav>
+  <div class="sidebar">
+    <div class="table-of-contents">
+      <p class="title">目录</p>
+      <div id="toc"></div>
+    </div>
+    <ul>
+      <li>
+        <a href="https://www.npmjs.com/package/css-profiler" target="_blank">文档</a>
+      </li>
+    </ul>
   </div>
-  <h2 id="h2-files">分析的文件</h2>
-  <ol class="code">
-  <% cssInputList.forEach(item => { %>
-    <li>
-      <div><%= item.path %></div>
-      <div><%= item.sourceMapFilePath %></div>
-    </li>
-  <% }) %>
-  </ol>
-  <h2 id="h2-duplicated-count">样式规则数量</h2>
-  <p>共分析了 <%= ruleCount %> 条样式规则（具体声明的规则可能多于此数）</p>
+  <div class="main-container">
+    <section>
+      <h2 id="h2-files">分析的文件</h2>
+      <ol class="code">
+      <% cssInputList.forEach(item => { %>
+        <li>
+          <div><%= item.path %></div>
+          <div><%= item.sourceMapFilePath %></div>
+        </li>
+      <% }) %>
+      </ol>
+    </section>
 
-  <h2 id="h2-duplicated-rules">重复声明了的样式(Duplicated rules)</h2>
-  <p>共有 <strong><%= duplicatedRules.length %></strong> 个规则具有相同的选择器名字，请检查是否可以进行合并？</p>
-  <table class="code">
-    <thead>
-      <th>样式名</th>
-      <th>重复次数</th>
-      <th>源代码</th>
-    </thead>
-    <tbody>
-    <% duplicatedRules.forEach(item => { %>
-      <tr>
-        <td><%= item.selector %></td>
-        <td><%= item.count %></td>
-        <td>
-          <% item.codes.forEach((code, index) => { %>
-            <div class="inline-code-block">
-              <div class="title">
-                <div>Line <%= item.positions[index].line %>, Column <%= item.positions[index].column %></div>
-                <% if (item.sourcePositions[index]) { %>
-                <div>=> <%= item.sourcePositions[index].sourceFile %>, Line <%= item.sourcePositions[index].line %>, Column <%= item.sourcePositions[index].column %></div>
-                <% } %>
+    <section>
+      <h2 id="h2-duplicated-count">样式规则数量</h2>
+      <p>共分析了 <%= ruleCount %> 条样式规则（具体声明的规则可能多于此数）</p>
+    </section>
+
+    <section>
+      <h2 id="h2-duplicated-rules">重复声明了的样式(Duplicated rules)</h2>
+      <p>共有 <strong><%= duplicatedRules.length %></strong> 个规则具有相同的选择器名字，请检查是否可以进行合并？</p>
+      <table class="code">
+        <thead>
+          <th style="width: 20%;">样式名</th>
+          <th style="width: 5%;">重复次数</th>
+          <th>源代码</th>
+        </thead>
+        <tbody>
+        <% duplicatedRules.forEach(item => { %>
+          <tr>
+            <td><%= item.selector %></td>
+            <td><%= item.count %></td>
+            <td>
+              <% item.codes.forEach((code, index) => { %>
+                <div class="inline-code-block">
+                  <div class="title">
+                    <div>Line <%= item.positions[index].line %>, Column <%= item.positions[index].column %></div>
+                    <% if (item.sourcePositions[index]) { %>
+                    <div>
+                      源码文件：<a href="javascript:void(0);"><%= item.sourcePositions[index].sourceFile %></a>
+                    </div>
+                    <div>
+                      源码位置：Line <%= item.sourcePositions[index].line %>, Column <%= item.sourcePositions[index].column %>
+                    </div>
+                    <% } %>
+                  </div>
+                  <pre><code class="css"><%= code %></code></pre>
+                </div>
+              <% }) %>
+            </td>
+          </tr>
+        <% }) %>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2 id="h2-rules-have-same-content">内容重复的样式</h2>
+      <table>
+        <thead>
+          <th style="width: 90px;">内容相似度</th>
+          <th>样式声明</th>
+        </thead>
+        <tbody>
+        <% Object.keys(keyByContent).forEach(key => { %>
+          <tr>
+            <td>100%</td>
+            <td>
+              <div>下面的<%= keyByContent[key].length %> 个样式有相同的内容：</div>
+              <div class="scroll-x">
+                <% keyByContent[key].forEach(item => { %>
+                  <div class="inline-code-block">
+                    <div class="title">
+                      <div>Line <%= item.position.line %>, Column <%= item.position.column %></div>
+                      <div>
+                        源码文件：<a href="javascript:void(0);"><%= item.sourcePosition.sourceFile %></a>
+                      </div>
+                      <div>
+                        源码位置：Line <%= item.sourcePosition.line %>, Column <%= item.sourcePosition.column %>
+                      </div>
+                    </div>
+                    <pre><code class="css"><%= item.code %></code></pre>
+                  </div>
+                <% }) %>
               </div>
-              <pre><code class="css"><%= code %></code></pre>
-            </div>
-          <% }) %>
-        </td>
-      </tr>
-    <% }) %>
-    </tbody>
-  </table>
+            </td>
+          </tr>
+        <% }) %>
+      </table>
+    </section>
 
-  <h2 id="h2-top20-longest-rules">TOP20 样式名字最长的选择器</h2>
-  <div class="orderd-list code">
-  <% top20LongNames.forEach((item, index) => { %>
-    <div><label>[<%= index + 1 %>]</label><%= item.replace(/\n/g, '') %></div>
-  <% }) %>
+    <section>
+      <h2 id="h2-rules-have-similar-content">内容相似的样式</h2>
+      <p>发现有<%= rulesHaveSimilarContent.length %>个样式具有较高的相似度。请检查是否可以通过采取适当地合并策略减少代码重复度。</p>
+      <table name="similarity-table">
+        <thead>
+          <th style="width: 90px;">内容相似度</th>
+          <th>样式声明</th>
+        </thead>
+        <tbody>
+        <% rulesHaveSimilarContent.forEach(item => { %>
+          <tr>
+            <td><%= item.similarity %></td>
+            <td>
+              <div class="scroll-x">
+                <% item.nodes.forEach(node => { %>
+                  <div class="inline-code-block">
+                    <div class="title">
+                      <div>Line <%= node.position.line %>, Column <%= node.position.column %></div>
+                      <div>
+                        源码文件：<a href="javascript:void(0);"><%= node.sourcePosition.sourceFile %></a>
+                      </div>
+                      <div>
+                        源码位置：Line <%= node.sourcePosition.line %>, Column <%= node.sourcePosition.column %>
+                      </div>
+                    </div>
+                    <pre><code class="css"><%= node.code %></code></pre>
+                  </div>
+                <% }) %>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      </table>
+    </section>
+
+    <section>
+      <h2 id="h2-top20-longest-rules">TOP20 样式名字最长的选择器</h2>
+      <div class="orderd-list code">
+      <% top20LongNames.forEach((item, index) => { %>
+        <div><label>[<%= index + 1 %>]</label><%= item.replace(/\n/g, '') %></div>
+      <% }) %>
+      </div>
+    </section>
   </div>
   <script>
     <%- jsCode %>

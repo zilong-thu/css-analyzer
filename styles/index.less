@@ -29,6 +29,11 @@ code, .code {
   font-family: monospace;
 }
 
+a {
+  color: #0366d6;
+  text-decoration: none;
+}
+
 .orderd-list {
   label {
     margin: 0 .06rem;
@@ -57,12 +62,17 @@ table {
 .inline-code-block {
   border: 1px solid #e8e8e8;
   border-radius: .05rem;
+  display: inline-block;
+  width: 3.5rem;
 
   .title {
     padding: .1rem;
     border-radius: .05rem .05rem 0 0;
     border-bottom: 1px solid #e8e8e8;
     background: #f6f8fa;
+    white-space: nowrap;
+    word-break: break-all;
+    overflow-x: auto;
   }
 
   pre {
@@ -74,10 +84,39 @@ table {
     padding: .1rem;
     background: #fff;
   }
-
-  & + & {
-    margin-top: .1rem;
+}
+[name="similarity-table"] {
+  .inline-code-block {
+    width: 48%;
   }
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1rem;
+  background-color: #333;
+  padding: 0 .3rem;
+  &, h1 {
+    color: #fff;
+  }
+}
+
+.sidebar {
+  position: fixed;
+  top: 1rem;
+  left: 0;
+  width: 3rem;
+  bottom: 0;
+  padding: .3rem;
+  background: #fff;
+}
+
+.main-container {
+  margin-top: 1rem;
+  margin-left: 3rem;
 }
 
 .table-of-contents {
@@ -96,5 +135,14 @@ table {
     a {
       text-decoration: none;
     }
+  }
+}
+
+section {
+  margin-top: .5rem;
+
+  h2 {
+    border-bottom: .02rem solid #333;
+    font-size: 1.6em;
   }
 }
