@@ -39,7 +39,7 @@
 
     <section>
       <h2 id="h2-duplicated-count">样式规则数量</h2>
-      <p>共分析了 <%= ruleCount %> 条样式规则（具体声明的规则可能多于此数）</p>
+      <p>共分析了 <strong><%= ruleCount %></strong> 条样式规则（具体声明的规则可能多于此数）</p>
     </section>
 
     <section>
@@ -82,17 +82,19 @@
 
     <section>
       <h2 id="h2-rules-have-same-content">内容重复的样式</h2>
+      <p>发现有<strong><%= Object.keys(keyByContent).length %></strong>个样式具有完全相同的内容。一定是哪里出了问题……</p>
       <table>
         <thead>
           <th style="width: 90px;">内容相似度</th>
+          <th style="width: 5%;">重复次数</th>
           <th>样式声明</th>
         </thead>
         <tbody>
         <% Object.keys(keyByContent).forEach(key => { %>
           <tr>
             <td>100%</td>
+            <td><strong><%= keyByContent[key].length %></strong></td>
             <td>
-              <div>下面的<%= keyByContent[key].length %> 个样式有相同的内容：</div>
               <div class="scroll-x">
                 <% keyByContent[key].forEach(item => { %>
                   <div class="inline-code-block">
@@ -117,7 +119,7 @@
 
     <section>
       <h2 id="h2-rules-have-similar-content">内容相似的样式</h2>
-      <p>发现有<%= rulesHaveSimilarContent.length %>个样式具有较高的相似度。请检查是否可以通过采取适当地合并策略减少代码重复度。</p>
+      <p>发现有<strong><%= rulesHaveSimilarContent.length %></strong>个样式具有较高的相似度。请检查是否可以通过采取适当地合并策略减少代码重复度。</p>
       <table name="similarity-table">
         <thead>
           <th style="width: 90px;">内容相似度</th>

@@ -141,8 +141,16 @@ module.exports = function(cssInputItem, userOptions = {}) {
   const keyByContent = {};
   for (let i = 0; i < selectorAndContentList.length - 1; i++) {
     let a = selectorAndContentList[i];
+
+    if (/\d+%/.test(a.selector)) {
+      continue;
+    }
+
     for (let j = i + 1; j < selectorAndContentList.length; j++) {
       let b = selectorAndContentList[j];
+      if (/\d+%/.test(b.selector)) {
+        continue;
+      }
       if (a.content === b.content && (i !== j)) {
         const key = a.content;
         if (!keyByContent[key]) {
