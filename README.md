@@ -4,19 +4,24 @@ CSS-Profiler is a PostCSS Cli tool to analysis CSS code quality, find its proble
 
 ## Features
 
-+ Find out duplicated rules.
-+ Fine TOP20 selectors that have most characters.
++ 找出样式名（即选择器）完全相同的样式
++ 找到具有完全相同的内容的所有样式
++ 找出样式内容相似度在 70% 及以上的样式规则
++ 找出前 20 个名字最长的选择器
++ 支持 sourceMap 分析
 
-## Usage
+## 使用
 
-### Command Line Usage
+### 命令行用法
+
+目前只支持分析单个 CSS 文件。
 
 ```bash
 # install
 $ npm i -g css-profiler
 
 # analysis one or more css files
-$ css-profile style.css style2.css
+$ css-profile style.css
 # result will display below.
 ```
 
@@ -49,6 +54,16 @@ button {
 
 let result = cssProfiler(cssContent);
 ```
+
+## 原理
+
+可能造成代码重复的原因有：
+
++ 写代码的时候发懒，复制了已有代码
++ 对 `scoped` 机制的使用不恰当
++ 构建过程出现了问题
++ 使用预/后处理器时，重复引入某个 css 源文件
+
 
 ## Author
 
