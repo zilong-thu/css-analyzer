@@ -1,6 +1,6 @@
 {
   "name": "css-profiler",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "A tool that runs static analysis with PostCSS for css files.",
   "main": "profiler.js",
   "repository": "https://github.com/zilong-thu/css-analyzer",
@@ -8,7 +8,7 @@
     "css-profile": "cli.js"
   },
   "scripts": {
-    "build-css": "lessc styles/index.less layout.css",
+    "build": "lessc styles/index.less layout.css",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "zilong-thu",

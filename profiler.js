@@ -19,10 +19,13 @@ function removeVueStyleHashMark(str) {
 
 module.exports = function(cssInputItem, userOptions = {}) {
   let {cssCode, sourceMap} = cssInputItem;
-  sourceMap = JSON.parse(sourceMap);
+  sourceMap = sourceMap ? JSON.parse(sourceMap) : null;
 
   const root = postcss.parse(cssCode);
-  const mappingsDecoded = decodeMappings(sourceMap.mappings);
+  let mappingsDecoded;
+  if (sourceMap) {
+    mappingsDecoded = decodeMappings(sourceMap.mappings);
+  }
 
   const ruleASTGroupByName = {};
   let ruleCount = 0;
@@ -57,11 +60,11 @@ module.exports = function(cssInputItem, userOptions = {}) {
     };
 
     // 尝试用选择器的位置去找源码位置
-    let sourcePositionArr = mappingsDecoded[position.line_zeroBased]
+    let sourcePositionArr = (mappingsDecoded && mappingsDecoded[position.line_zeroBased])
       ? mappingsDecoded[position.line_zeroBased].find(item => item[0] === position.column_zeroBased)
       : null;
 
-    let sourcePosition = null;
+    let sourcePosition;
     if (sourcePositionArr) {
       let sourceFile = sourceMap.sources[sourcePositionArr[1]];
       sourceFile = sourceFile.replace(/webpack:\/\/\//, '');
@@ -71,6 +74,12 @@ module.exports = function(cssInputItem, userOptions = {}) {
         column: sourcePositionArr[3] + 1,
         sourceFile,
       }
+    } else {
+      sourcePosition = {
+        line: '',
+        column: '',
+        sourceFile: '',
+      };
     }
 
 

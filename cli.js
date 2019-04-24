@@ -86,7 +86,7 @@ filepathList.forEach(item => {
     path: item,
     cssCode: content,
     sourceMapFilePath,
-    sourceMap: fs.readFileSync(sourceMapFilePath, 'utf8'),
+    sourceMap: sourceMapFilePath ? fs.readFileSync(sourceMapFilePath, 'utf8') : '',
   };
   console.log('cssInputList: ', ele.path, ele.sourceMapFilePath);
   cssInputList.push(ele);

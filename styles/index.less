@@ -96,17 +96,19 @@ nav {
   top: 0;
   left: 0;
   right: 0;
-  height: 1rem;
+  height: .6rem;
+  line-height: .6rem;
   background-color: #333;
   padding: 0 .3rem;
   &, h1 {
     color: #fff;
+    margin: 0;
   }
 }
 
 .sidebar {
   position: fixed;
-  top: 1rem;
+  top: .6rem;
   left: 0;
   width: 3rem;
   bottom: 0;
@@ -115,7 +117,7 @@ nav {
 }
 
 .main-container {
-  margin-top: 1rem;
+  margin-top: .6rem;
   margin-left: 3rem;
 }
 
@@ -139,10 +141,19 @@ nav {
 }
 
 section {
-  margin-top: .5rem;
-
   h2 {
     border-bottom: .02rem solid #333;
     font-size: 1.6em;
+    height: 1rem;
+    padding-top: .6rem;
+    outline: none;
+    margin-top: 0;
+  }
+
+  &:first-child {
+    h2 {
+      height: .5rem;
+      padding-top: .1rem;
+    }
   }
 }

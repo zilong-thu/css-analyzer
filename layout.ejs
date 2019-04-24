@@ -11,7 +11,6 @@
 <body>
   <nav>
     <h1>CSS Static Analysis Report</h1>
-    <p><%= time %></p>
   </nav>
   <div class="sidebar">
     <div class="table-of-contents">
@@ -20,20 +19,24 @@
     </div>
     <ul>
       <li>
-        <a href="https://www.npmjs.com/package/css-profiler" target="_blank">文档</a>
+        <a href="https://www.npmjs.com/package/css-profiler" target="_blank">npm 文档</a>
       </li>
     </ul>
   </div>
   <div class="main-container">
     <section>
-      <h2 id="h2-files">分析的文件</h2>
+      <h2 id="h2-files">基本信息</h2>
       <ol class="code">
       <% cssInputList.forEach(item => { %>
         <li>
+          分析的文件：
           <div><%= item.path %></div>
           <div><%= item.sourceMapFilePath %></div>
         </li>
       <% }) %>
+        <li>
+          <div>报告时间：<%= time %></div>
+        </li>
       </ol>
     </section>
 
@@ -48,7 +51,7 @@
       <table class="code">
         <thead>
           <th style="width: 20%;">样式名</th>
-          <th style="width: 5%;">重复次数</th>
+          <th style="width: 80px;">重复次数</th>
           <th>源代码</th>
         </thead>
         <tbody>
@@ -61,7 +64,7 @@
                 <div class="inline-code-block">
                   <div class="title">
                     <div>Line <%= item.positions[index].line %>, Column <%= item.positions[index].column %></div>
-                    <% if (item.sourcePositions[index]) { %>
+                    <% if (item.sourcePositions[index].sourceFile) { %>
                     <div>
                       源码文件：<a href="javascript:void(0);"><%= item.sourcePositions[index].sourceFile %></a>
                     </div>
@@ -86,7 +89,7 @@
       <table>
         <thead>
           <th style="width: 90px;">内容相似度</th>
-          <th style="width: 5%;">重复次数</th>
+          <th style="width: 80px;">重复次数</th>
           <th>样式声明</th>
         </thead>
         <tbody>
@@ -100,12 +103,14 @@
                   <div class="inline-code-block">
                     <div class="title">
                       <div>Line <%= item.position.line %>, Column <%= item.position.column %></div>
+                      <% if (item.sourcePosition.sourceFile) { %>
                       <div>
                         源码文件：<a href="javascript:void(0);"><%= item.sourcePosition.sourceFile %></a>
                       </div>
                       <div>
                         源码位置：Line <%= item.sourcePosition.line %>, Column <%= item.sourcePosition.column %>
                       </div>
+                      <% } %>
                     </div>
                     <pre><code class="css"><%= item.code %></code></pre>
                   </div>
@@ -135,12 +140,14 @@
                   <div class="inline-code-block">
                     <div class="title">
                       <div>Line <%= node.position.line %>, Column <%= node.position.column %></div>
+                      <% if (node.sourcePosition.sourceFile) { %>
                       <div>
                         源码文件：<a href="javascript:void(0);"><%= node.sourcePosition.sourceFile %></a>
                       </div>
                       <div>
                         源码位置：Line <%= node.sourcePosition.line %>, Column <%= node.sourcePosition.column %>
                       </div>
+                      <% } %>
                     </div>
                     <pre><code class="css"><%= node.code %></code></pre>
                   </div>
@@ -159,6 +166,11 @@
         <div><label>[<%= index + 1 %>]</label><%= item.replace(/\n/g, '') %></div>
       <% }) %>
       </div>
+    </section>
+
+    <section>
+      <h2 id="h2-top20-longest-nested-rules">TOP20 嵌套层级最深的选择器</h2>
+      <p>TODO</p>
     </section>
   </div>
   <script>
@@ -179,6 +191,7 @@
       contentSelector: 'body',
       // Which headings to grab inside of the contentSelector element.
       headingSelector: 'h2, h3',
+      headingsOffset: 60,
     });
   </script>
 </body>
