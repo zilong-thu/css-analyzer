@@ -17,6 +17,18 @@ function removeVueStyleHashMark(str) {
   return str;
 }
 
+/**
+ * 美化压缩了的 CSS 代码
+ */
+function formatCssCode(rule) {
+  let res = rule.selector + ' {';
+  rule.nodes.forEach(node => {
+    res += `\n  ${node.prop}: ${node.value};`;
+  });
+  res += '\n}';
+  return res;
+}
+
 module.exports = function(cssInputItem, userOptions = {}) {
   let {cssCode, sourceMap} = cssInputItem;
   sourceMap = sourceMap ? JSON.parse(sourceMap) : null;
@@ -34,8 +46,9 @@ module.exports = function(cssInputItem, userOptions = {}) {
    * 抽象了的{规则: 样式内容}数组
    * [{
    *   selector: '.clearfix',
-   *   content: 'overflow: auto; zoom: 1;',
+   *   contentStr: 'overflow: auto; zoom: 1;',
    *   position: {line: 1, column: 1},
+   *   code: '',  // 格式化了的代码
    * }, {}]
    */
   const selectorAndContentList = [];
@@ -73,7 +86,7 @@ module.exports = function(cssInputItem, userOptions = {}) {
         line: sourcePositionArr[2] + 1,
         column: sourcePositionArr[3] + 1,
         sourceFile,
-      }
+      };
     } else {
       sourcePosition = {
         line: '',
@@ -91,20 +104,19 @@ module.exports = function(cssInputItem, userOptions = {}) {
     let content = rule.nodes
       .filter(item => item.type === 'decl')
       .map(item => item.toString());
-    if (content.length) {
-      content.sort();
-      selectorAndContentList.push({
-        selector,
-        code: rule.toString(),
-        contentArr: content,
-        content: content.join(';'),
-        position: {
-          line: rule.source.start.line,
-          column: rule.source.start.column,
-        },
-        sourcePosition,
-      });
-    }
+    const currentNode = {
+      selector,
+      code: formatCssCode(rule),
+      position: {
+        line: rule.source.start.line,
+        column: rule.source.start.column,
+      },
+      sourcePosition,
+    };
+    content.sort();
+    currentNode.contentArr = content;
+    currentNode.contentStr = content.join(';');
+    selectorAndContentList.push(currentNode);
 
     /**
      * 规则名字记录
@@ -115,14 +127,14 @@ module.exports = function(cssInputItem, userOptions = {}) {
         selector,
         selectors: rule.selectors,
         nodes: rule.nodes,
-        codes: [rule.toString()],
+        codes: [currentNode.code],
         // 记录代码的起始位置
         positions: [position],
         sourcePositions: [sourcePosition],
       };
     } else {
       ruleASTGroupByName[selector].count++;
-      ruleASTGroupByName[selector].codes.push(rule.toString());
+      ruleASTGroupByName[selector].codes.push(currentNode.code);
       ruleASTGroupByName[selector].positions.push(position);
       ruleASTGroupByName[selector].sourcePositions.push(sourcePosition);
     }
@@ -160,8 +172,8 @@ module.exports = function(cssInputItem, userOptions = {}) {
       if (/\d+%/.test(b.selector)) {
         continue;
       }
-      if (a.content === b.content && (i !== j)) {
-        const key = a.content;
+      if (a.contentStr === b.contentStr && (i !== j)) {
+        const key = a.contentStr;
         if (!keyByContent[key]) {
           const s = new Set();
           s.add(i);

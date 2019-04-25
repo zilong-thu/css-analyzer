@@ -47,7 +47,9 @@
 
     <section>
       <h2 id="h2-duplicated-rules">重复声明了的样式(Duplicated rules)</h2>
+      <% if (duplicatedRules.length) { %>
       <p>共有 <strong><%= duplicatedRules.length %></strong> 个规则具有相同的选择器名字，请检查是否可以进行合并？</p>
+      <% } %>
       <table class="code">
         <thead>
           <th style="width: 20%;">样式名</th>
@@ -86,8 +88,10 @@
     </section>
 
     <section>
-      <h2 id="h2-rules-have-same-content">内容重复的样式</h2>
+      <h2 id="h2-rules-have-same-content">内容完全相同的样式</h2>
+      <% if (Object.keys(keyByContent).length) { %>
       <p>发现有<strong><%= Object.keys(keyByContent).length %></strong>个样式具有完全相同的内容。一定是哪里出了问题……</p>
+      <% } %>
       <table>
         <thead>
           <th style="width: 90px;">内容相似度</th>
