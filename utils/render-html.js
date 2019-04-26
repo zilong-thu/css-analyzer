@@ -32,8 +32,8 @@ module.exports = function(data, options = {}) {
   data.cssCode = cssCode;
   data.jsCode  = jsCode;
 
-  const outputFileName = options.out || 'css-profile-report.html';
- 
+  const outputFileName = options.out;
+
   const html = template(data);
   const outputFilePath = path.resolve(process.cwd(), outputFileName);
   fs.writeFileSync(outputFilePath, html);

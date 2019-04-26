@@ -18,11 +18,10 @@ Usage
   $ css-profile <filename>
 
 Options
-  --type, -t  报告的输出方式
-    std : 打印到标准输入输出设备上（此为默认值）
-    html: 输出 html 形式的报告，并在浏览器里打开
-  --out, -o   指定 html 报告的输出文件。默认会在当前工作目录下创建一个名为 css-profile-report.html 的文件并且尝试用 Chrome 打开它
-  --open-in-browser  在浏览器中自动打开，默认为 true
+  --concat, -c        是否对多个文件进行拼接分析
+  --out, -o           指定 html 报告的输出文件。默认会在当前工作目录下创建一个名为 css-profile-report.html 的文件并且尝试用 Chrome 打开它
+  --open-in-browser   在浏览器中自动打开，默认为 true
+  --ignore-scope, -i  分析时忽略那些 scope 属性。如果设置为 true，那么 .clearfix[d-v-a89fcbed]，分析时会忽略 [d-v-a89fcbed].
 
 Examples
   $ css-profile ./static/vendor.css ./static/mall.css --type html
@@ -32,10 +31,6 @@ Examples
 
 const cli = meow(DESCRIPTION, {
   flags: {
-    type: {
-      type: 'string',
-      default: 'html',
-    },
     out: {
       type: 'string',
       alias: 'o',
@@ -88,7 +83,6 @@ filepathList.forEach(item => {
     sourceMapFilePath,
     sourceMap: sourceMapFilePath ? fs.readFileSync(sourceMapFilePath, 'utf8') : '',
   };
-  console.log('cssInputList: ', ele.path, ele.sourceMapFilePath);
   cssInputList.push(ele);
 });
 
@@ -99,33 +93,10 @@ const cssInputItem = cssInputList[0];
 const result = profiler(cssInputItem, flags);
 result.cssInputList = cssInputList;
 
-if (flags.type === 'html' || flags.out) {
-  render(result, {
-    openInBrowser: flags.openInBrowser,
-    out: flags.out,
-  });
-} else {
-  console.log(chalk.bold('\n==== CSS Static Analysis Report ===='));
-  console.log(`共声明了 ${chalk.bold(result.ruleCount)} 条样式规则`);
-
-  logger.blockTitle('1. Duplicated rules: ');
-  const table = new Table({
-    head: [chalk.white('选择器名称'), chalk.white('出现的次数')],
-  });
-  result.duplicatedRules.forEach(item => {
-    table.push([chalk.yellow(item.selector), item.count]);
-  });
-  console.log(table.toString());
-  console.log(`
-  共有 ${chalk.bold(result.duplicatedRules.length)} 个规则具有相同的选择器名字，请检查是否可以进行合并？
-  提示：此问题通常由于重复定义样式，或者重复导入 css 文件引起。`);
-
-  logger.blockTitle(`2. TOP${result.TOP_N} 样式名字最长的选择器: `);
-  result.top20LongNames.forEach((item, index) => {
-    const str = item.replace(/\n/g, '');
-    console.log(`[${index + 1}]`, chalk.yellow(str));
-  });
-}
-
+const outputFileName = flags.out || 'css-profile-report.html';
+render(result, {
+  openInBrowser: flags.openInBrowser,
+  out: outputFileName,
+});
 console.timeEnd('css-profiler');
 console.log('version: ', packageMeta.version);
