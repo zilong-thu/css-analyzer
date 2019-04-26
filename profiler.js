@@ -184,10 +184,11 @@ module.exports = function(cssInputItem, userOptions = {}) {
         }
       } else {
         /**
-         * 寻找两个内容的最长公共子序列（以属性、值为最小分隔单元）
+         * 寻找两个内容的最长公共子序列（以属性、值为最小分隔单元）的长度
+         * 只需要关心长度即可，不必关心哪些元素是相同的
          */
         let lcsRes = findLCS(a.contentArr, b.contentArr);
-        const similarity = Math.min(lcsRes.length / a.contentArr.length, lcsRes.length / b.contentArr.length);
+        const similarity = Math.min(lcsRes / a.contentArr.length, lcsRes / b.contentArr.length);
         if (similarity >= 0.7) {
           rulesHaveSimilarContent.push({
             nodes: [a, b],
