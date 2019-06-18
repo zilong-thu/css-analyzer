@@ -48,9 +48,9 @@ const input = cli.input;
 let filepathList = [];
 // glob 模式只支持单个输入的情形
 // 转换为绝对路径
-if (input.length === 1 && /^\.{1,2}\//.test(input[0])) {
-  input[0] = path.resolve(process.cwd(), input[0]);
-  filepathList = glob.sync(input[0]);
+if (input.length === 1) {
+  const file = /^\/.+/.test(input[0]) ? input[0] : path.resolve(process.cwd(), input[0]);
+  filepathList = glob.sync(file);
 } else if (input.length >= 2) {
   filepathList = cli.input.map(item => {
     return path.resolve(process.cwd(), item);
