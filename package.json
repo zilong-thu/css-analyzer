@@ -1,6 +1,6 @@
 {
   "name": "css-profiler",
-  "version": "0.0.16-beta",
+  "version": "0.0.16",
   "description": "A tool that runs static analysis with PostCSS for css files.",
   "main": "profiler.js",
   "repository": "https://github.com/zilong-thu/css-analyzer",
