@@ -2,3 +2,4 @@ test/
 styles/
 out.json
 .vscode/
+.npmrc
